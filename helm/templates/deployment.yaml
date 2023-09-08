@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-watchlist-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-watchlist
+  template:
+    metadata:
+      labels:
+        app: flask-watchlist
+    spec:
+      containers:
+      - name: flask-watchlist-container
+        image: fullstackjam/flask-watchlist:master
+        ports:
+        - containerPort: 5000
