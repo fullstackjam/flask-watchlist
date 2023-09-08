@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+<form method="post">
+    Name<input type="text" name="title" autocomplete="off" required>
+    Year<input type="text" name="year" autocomplete="off" required>
+    <input class="btn btn-info" type="submit" name="submit" value="提交">
+</form>
+{% endif %}
+
+<table class="table table-bordered table-sm table-light table-hover table-responsive-lg">
+    <thead>
+        <tr>
+            <th>Name</th>
+            {% if current_user.is_authenticated %}
+            <th>操作</th>
+            {% endif %}
+            <th>Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for movie in movies %}
+        <tr>
+            <td>{{ movie.title }} - {{ movie.year }}</td>
+            {% if current_user.is_authenticated %}
+            <td>
+                <a class="btn btn-warning" href="{{ url_for('edit', movie_id=movie.id) }}">Edit</a>
+                <form class="btn" method="post" action="{{ url_for('delete', movie_id=movie.id) }}">
+                    <input class="btn btn-danger " type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
+                </form>
+            </td>
+            {% endif %}
+            <td><a class="btn btn-success" href="https://www.imdb.com/find?q={{ movie.title }}" target="_blank" title="Find this movie on IMDb">IMDb</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div align="center"><img class="img-responsive" src="{{ url_for('static', filename='images/totoro.gif') }}" ></div>
+{% endblock %}
