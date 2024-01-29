@@ -6,7 +6,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`{{ .Values.host }}`)
+    - match: Host(`{{ .Values.domain }}`)
       kind: Rule
       services:
         - name: flask-watchlist-service

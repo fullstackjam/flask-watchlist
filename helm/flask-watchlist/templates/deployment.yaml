@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: flask-watchlist-container
-        image: fullstackjam/flask-watchlist:master
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 5000
       imagePullSecrets:

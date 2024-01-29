@@ -1,1 +1,6 @@
-host: "flask-watchlist.fullstackjam.com"
+image:
+  repository: fullstackjam/flask-watchlist
+  pullPolicy: Always
+  tag: latest
+
+domain: "flask-watchlist.fullstackjam.com"
