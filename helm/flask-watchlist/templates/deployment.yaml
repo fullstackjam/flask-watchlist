@@ -17,3 +17,5 @@ spec:
         image: fullstackjam/flask-watchlist:master
         ports:
         - containerPort: 5000
+      imagePullSecrets:
+      - name: my-dockerhub-secret
