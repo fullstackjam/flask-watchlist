@@ -18,5 +18,3 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 5000
-      imagePullSecrets:
-      - name: my-dockerhub-secret
