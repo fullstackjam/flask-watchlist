@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-watchlist-deployment
+  name: flask-watchlist
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: flask-watchlist
@@ -13,8 +13,10 @@ spec:
         app: flask-watchlist
     spec:
       containers:
-      - name: flask-watchlist-container
+      - name: flask-watchlist
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: 5000
+        - containerPort: 80
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets.name }}

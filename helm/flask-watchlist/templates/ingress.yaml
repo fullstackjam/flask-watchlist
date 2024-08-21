@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-watchlist
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.dev"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+spec:
+  ingressClassName: nginx
+  {{- if .Values.ingress.hosts }}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-watchlist
+                port:
+                  number: 80
+    {{- end }}
+  {{- end }}
+  tls:
+    {{- if .Values.ingress.hosts }}
+    - hosts:
+        {{- range .Values.ingress.hosts }}
+        - {{ .host }}
+        {{- end }}
+      secretName: {{ .Values.ingress.tlsSecret }}
+    {{- end }}
