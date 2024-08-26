@@ -1,10 +1,10 @@
 when:
-  branch: master
+  branch: [master, develop]
   event: [push, pull_request]
 
 variables:
   - &file Dockerfile
-  - &repo harbor.fullstackjam.dev/app/flask-watchlist
+  - &repo registry.fullstackjam.dev/flask-watchlist
   - &commit_hash ${DRONE_COMMIT_SHA:0:7}
 
 steps:
@@ -14,11 +14,7 @@ steps:
       dockerfile: *file
       platforms: linux/amd64
       repo: *repo
-      registry: harbor.fullstackjam.dev
+      registry: registry.fullstackjam.dev
       tags:
         - latest
         - ${COMMIT_HASH}
-      username:
-        from_secret: harbor_username
-      password:
-        from_secret: harbor_password

@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: registry.fullstackjam.dev/app/flask-watchlist
+  repository: registry.fullstackjam.dev/flask-watchlist
   pullPolicy: Always
   tag: latest
 
@@ -10,6 +10,3 @@ ingress:
   hosts:
     - host: flask-watchlist.fullstackjam.dev
   tlsSecret: flask-watchlist-tls-certificate
-
-imagePullSecrets:
-  name: my-harbor-secret
