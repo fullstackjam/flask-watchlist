@@ -4,7 +4,7 @@ when:
 
 variables:
   - &file Dockerfile
-  - &repo registry.fullstackjam.dev/app/flask-watchlist
+  - &repo harbor.fullstackjam.dev/app/flask-watchlist
   - &commit_hash ${DRONE_COMMIT_SHA:0:7}
 
 steps:
@@ -14,7 +14,7 @@ steps:
       dockerfile: *file
       platforms: linux/amd64
       repo: *repo
-      registry: registry.fullstackjam.dev
+      registry: harbor.fullstackjam.dev
       tags:
         - latest
         - ${COMMIT_HASH}
