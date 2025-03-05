@@ -1,12 +1,12 @@
 replicaCount: 1
 
 image:
-  repository: registry.fullstackjam.dev/flask-watchlist
+  repository: registry.fullstackjam.com/flask-watchlist
   pullPolicy: Always
   tag: latest
 
 ingress:
   enabled: true
   hosts:
-    - host: flask-watchlist.fullstackjam.dev
+    - host: flask-watchlist.fullstackjam.com
   tlsSecret: flask-watchlist-tls-certificate
