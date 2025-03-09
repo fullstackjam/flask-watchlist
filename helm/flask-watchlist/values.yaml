@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: registry.fullstackjam.com/flask-watchlist
+  repository: fullstackjam/flask-watchlist
   pullPolicy: Always
   tag: latest
 
