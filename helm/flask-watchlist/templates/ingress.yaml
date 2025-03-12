@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: flask-watchlist
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /
     external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
