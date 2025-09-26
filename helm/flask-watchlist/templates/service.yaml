@@ -1,11 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-watchlist
+  name: {{ .Values.app.name }}
+  labels:
+    {{- include "flask-watchlist.commonLabels" . | nindent 4 }}
 spec:
   selector:
-    app: flask-watchlist
+    {{- include "flask-watchlist.selectorLabels" . | nindent 4 }}
   ports:
-    - protocol: TCP
-      port: 80
+    - port: 80
       targetPort: 5000
+      protocol: TCP
+      name: http

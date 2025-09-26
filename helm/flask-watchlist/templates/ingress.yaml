@@ -1,7 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: flask-watchlist
+  name: {{ .Values.app.name }}
+  labels:
+    {{- include "flask-watchlist.commonLabels" . | nindent 4 }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /
@@ -9,26 +11,18 @@ metadata:
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
 spec:
   ingressClassName: nginx
-  {{- if .Values.ingress.hosts }}
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host }}
+    - host: {{ .Values.ingress.host }}
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: flask-watchlist
+                name: {{ .Values.app.name }}
                 port:
                   number: 80
-    {{- end }}
-  {{- end }}
   tls:
-    {{- if .Values.ingress.hosts }}
     - hosts:
-        {{- range .Values.ingress.hosts }}
-        - {{ .host }}
-        {{- end }}
-      secretName: {{ .Values.ingress.tlsSecret }}
-    {{- end }}
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.app.name }}-tls-certificate

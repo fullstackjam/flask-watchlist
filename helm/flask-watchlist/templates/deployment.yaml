@@ -1,20 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-watchlist
+  name: {{ .Values.app.name }}
+  labels:
+    {{- include "flask-watchlist.commonLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: flask-watchlist
+      {{- include "flask-watchlist.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: flask-watchlist
+        {{- include "flask-watchlist.commonLabels" . | nindent 8 }}
     spec:
       containers:
-      - name: flask-watchlist
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        ports:
-        - containerPort: 80
+        - name: {{ .Values.app.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+              name: http
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              memory: 64Mi

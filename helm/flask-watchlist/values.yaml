@@ -1,12 +1,18 @@
+# Template values for your application
+# Copy this chart and modify these values for your project
+
+# Application configuration
+app:
+  name: flask-watchlist              # Change this to your app name (also used as namespace)
+
+# Deployment configuration
 replicaCount: 1
 
+# Container image
 image:
-  repository: fullstackjam/flask-watchlist
-  pullPolicy: Always
-  tag: latest
+  repository: fullstackjam/flask-watchlist  # Change this to your image repository
+  tag: latest                               # Change this to your image tag
 
+# Ingress configuration
 ingress:
-  enabled: true
-  hosts:
-    - host: flask-watchlist.fullstackjam.com
-  tlsSecret: flask-watchlist-tls-certificate
+  host: flask-watchlist.fullstackjam.com   # Change this to your domain
