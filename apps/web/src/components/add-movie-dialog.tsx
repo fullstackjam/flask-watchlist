@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,13 @@ import { useMetadataSearch } from "@/hooks/use-metadata";
 export function AddMovieDialog() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const { data: results, isFetching } = useMetadataSearch(query);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  // Debounce keystrokes so we don't hit OMDb (1000/day quota) on every character.
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query), 350);
+    return () => clearTimeout(t);
+  }, [query]);
+  const { data: results, isFetching } = useMetadataSearch(debouncedQuery);
   const create = useCreateMovie();
 
   async function add(r: { imdbId: string; title: string; year: string | null; posterUrl: string | null }) {

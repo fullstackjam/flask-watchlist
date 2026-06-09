@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -32,12 +32,22 @@ export function EditMovieDialog({
   const [rating, setRating] = useState(movie.userRating?.toString() ?? "");
   const [notes, setNotes] = useState(movie.notes ?? "");
 
+  // Re-seed local state when the movie prop changes (e.g. after a save invalidates
+  // the list and a fresh row arrives), so reopening the dialog never shows stale values.
+  useEffect(() => {
+    setStatus(movie.status);
+    setRating(movie.userRating?.toString() ?? "");
+    setNotes(movie.notes ?? "");
+  }, [movie.id, movie.status, movie.userRating, movie.notes]);
+
   async function save() {
+    const parsed = Number(rating);
+    const userRating = rating && Number.isFinite(parsed) ? Math.round(parsed) : null;
     await update.mutateAsync({
       id: movie.id,
       input: {
         status,
-        userRating: rating ? Number(rating) : null,
+        userRating,
         notes: notes || null,
         watchedAt: status === "watched" ? new Date().toISOString() : null,
       },
@@ -71,7 +81,11 @@ export function EditMovieDialog({
           <Textarea placeholder="笔记" value={notes} onChange={(e) => setNotes(e.target.value)} />
         </div>
         <DialogFooter className="justify-between">
-          <Button variant="destructive" onClick={() => remove.mutate(movie.id, { onSuccess: () => onOpenChange(false) })}>
+          <Button
+            variant="destructive"
+            disabled={remove.isPending}
+            onClick={() => remove.mutate(movie.id, { onSuccess: () => onOpenChange(false) })}
+          >
             删除
           </Button>
           <Button onClick={save} disabled={update.isPending}>保存</Button>
