@@ -41,6 +41,11 @@ export function AddMovieDialog() {
         <Input placeholder="输入片名…" value={query} onChange={(e) => setQuery(e.target.value)} autoFocus />
         <div className="max-h-80 space-y-2 overflow-y-auto">
           {isFetching && <p className="text-sm text-muted-foreground">搜索中…</p>}
+          {!isFetching && debouncedQuery.trim().length > 0 && results && results.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              没有找到结果。OMDb 目前只支持英文 / 原片名，试试用英文名搜索。
+            </p>
+          )}
           {results?.map((r) => (
             <button
               key={r.imdbId}
