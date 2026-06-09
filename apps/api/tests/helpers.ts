@@ -15,7 +15,7 @@ export async function applyMigrations() {
     const sql = migrations[path];
     for (const stmt of sql.split("--> statement-breakpoint")) {
       const trimmed = stmt.trim();
-      if (trimmed) await (env.DB as D1Database).exec(trimmed.replace(/\n/g, " "));
+      if (trimmed) await (env.DB as D1Database).exec(trimmed.replace(/\s+/g, " "));
     }
   }
 }
