@@ -13,6 +13,7 @@ export async function applyMigrations() {
   }) as Record<string, string>;
   for (const path of Object.keys(migrations).sort()) {
     const sql = migrations[path];
+    if (!sql) continue;
     for (const stmt of sql.split("--> statement-breakpoint")) {
       const trimmed = stmt.trim();
       if (trimmed) await (env.DB as D1Database).exec(trimmed.replace(/\s+/g, " "));
@@ -30,5 +31,6 @@ export async function seedUser(overrides: Partial<{ githubId: number; githubLogi
       avatarUrl: "https://example.com/a.png",
     })
     .returning();
+  if (!user) throw new Error("seedUser: insert returned no row");
   return user;
 }
