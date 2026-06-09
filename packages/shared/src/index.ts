@@ -7,7 +7,10 @@ export type WatchStatus = z.infer<typeof watchStatusSchema>;
 // Payload for creating a movie in the user's list.
 export const createMovieSchema = z.object({
   title: z.string().min(1).max(200),
-  year: z.string().regex(/^\d{4}$/).optional(),
+  year: z
+    .string()
+    .regex(/^\d{4}$/)
+    .optional(),
   imdbId: z.string().optional(),
   posterUrl: z.string().url().optional(),
   overview: z.string().optional(),
@@ -20,7 +23,10 @@ export type CreateMovieInput = z.infer<typeof createMovieSchema>;
 // Payload for updating a movie (all optional).
 export const updateMovieSchema = z.object({
   title: z.string().min(1).max(200).optional(),
-  year: z.string().regex(/^\d{4}$/).optional(),
+  year: z
+    .string()
+    .regex(/^\d{4}$/)
+    .optional(),
   status: watchStatusSchema.optional(),
   userRating: z.number().int().min(1).max(10).nullable().optional(),
   notes: z.string().max(2000).nullable().optional(),
