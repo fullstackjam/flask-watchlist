@@ -105,3 +105,14 @@ venv.bak/
 .mypy_cache/
 
 data.db
+
+# Node / TypeScript
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
