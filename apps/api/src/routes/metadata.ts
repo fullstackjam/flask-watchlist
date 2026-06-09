@@ -11,7 +11,7 @@ route.use("*", requireAuth);
 
 route.get("/search", zValidator("query", z.object({ q: z.string().min(1) })), async (c) => {
   const { q } = c.req.valid("query");
-  const results = await searchMetadata(q, c.env.OMDB_API_KEY);
+  const results = await searchMetadata(q, c.env.TMDB_API_KEY);
   return c.json({ results });
 });
 

@@ -14,32 +14,51 @@ it("requires auth", async () => {
   expect(res.status).toBe(401);
 });
 
-it("proxies OMDb search and normalizes results", async () => {
+it("proxies TMDB search (incl. Chinese) and normalizes results", async () => {
   const user = await seedUser();
   vi.spyOn(globalThis, "fetch").mockResolvedValue(
     new Response(
       JSON.stringify({
-        Search: [
-          { Title: "Dune", Year: "2021", imdbID: "tt1160419", Poster: "https://img/dune.jpg" },
-          { Title: "Dune", Year: "1984", imdbID: "tt0087182", Poster: "N/A" },
+        results: [
+          { id: 27205, title: "盗梦空间", release_date: "2010-07-15", poster_path: "/abc.jpg" },
+          { id: 999, title: "No Poster", release_date: "", poster_path: null },
         ],
       }),
     ),
   );
 
   const res = await app.request(
-    "/api/metadata/search?q=dune",
+    "/api/metadata/search?q=盗梦空间",
     { headers: { Cookie: `session=${await signSession({ userId: user.id }, env.JWT_SECRET)}` } },
     env,
   );
   expect(res.status).toBe(200);
-  const body = (await res.json()) as { results: { imdbId: string; title: string; posterUrl: string | null }[] };
+  const body = (await res.json()) as {
+    results: { imdbId: string; title: string; year: string | null; posterUrl: string | null }[];
+  };
   expect(body.results).toHaveLength(2);
   expect(body.results[0]).toEqual({
-    imdbId: "tt1160419",
-    title: "Dune",
-    year: "2021",
-    posterUrl: "https://img/dune.jpg",
+    imdbId: "27205",
+    title: "盗梦空间",
+    year: "2010",
+    posterUrl: "https://image.tmdb.org/t/p/w342/abc.jpg",
   });
   expect(body.results[1]?.posterUrl).toBeNull();
+  expect(body.results[1]?.year).toBeNull();
+});
+
+it("calls TMDB with the Chinese language param", async () => {
+  const user = await seedUser({ githubId: 222, githubLogin: "lang" });
+  const spy = vi
+    .spyOn(globalThis, "fetch")
+    .mockResolvedValue(new Response(JSON.stringify({ results: [] })));
+
+  await app.request(
+    "/api/metadata/search?q=test",
+    { headers: { Cookie: `session=${await signSession({ userId: user.id }, env.JWT_SECRET)}` } },
+    env,
+  );
+  const calledUrl = String(spy.mock.calls[0]?.[0]);
+  expect(calledUrl).toContain("api.themoviedb.org/3/search/movie");
+  expect(calledUrl).toContain("language=zh-CN");
 });

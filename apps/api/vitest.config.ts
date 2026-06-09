@@ -11,7 +11,7 @@ export default defineWorkersConfig({
             GITHUB_CLIENT_ID: "test-client-id",
             GITHUB_CLIENT_SECRET: "test-client-secret",
             JWT_SECRET: "test-jwt-secret-value-please",
-            OMDB_API_KEY: "test-omdb-key",
+            TMDB_API_KEY: "test-tmdb-key",
             APP_URL: "http://localhost:5173",
           },
         },

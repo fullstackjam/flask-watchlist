@@ -9,7 +9,7 @@ export function AddMovieDialog() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
-  // Debounce keystrokes so we don't hit OMDb (1000/day quota) on every character.
+  // Debounce keystrokes so we don't hit the TMDB API on every character.
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQuery(query), 350);
     return () => clearTimeout(t);
@@ -42,9 +42,7 @@ export function AddMovieDialog() {
         <div className="max-h-80 space-y-2 overflow-y-auto">
           {isFetching && <p className="text-sm text-muted-foreground">搜索中…</p>}
           {!isFetching && debouncedQuery.trim().length > 0 && results && results.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              没有找到结果。OMDb 目前只支持英文 / 原片名，试试用英文名搜索。
-            </p>
+            <p className="text-sm text-muted-foreground">没有找到结果，换个关键词试试。</p>
           )}
           {results?.map((r) => (
             <button

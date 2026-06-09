@@ -6,7 +6,7 @@ export type Bindings = {
   GITHUB_CLIENT_ID: string;
   GITHUB_CLIENT_SECRET: string;
   JWT_SECRET: string;
-  OMDB_API_KEY: string;
+  TMDB_API_KEY: string;
   APP_URL: string;
 };
 
