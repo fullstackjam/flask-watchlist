@@ -15,7 +15,7 @@
     {
       "binding": "DB",
       "database_name": "watchlist",
-      "database_id": "PLACEHOLDER_RUN_D1_CREATE",
+      "database_id": "7134f244-84c0-46fe-9b04-e2a5f272a158",
       "migrations_dir": "drizzle"
     }
   ]
