@@ -14,7 +14,7 @@ const STATUS_LABEL: Record<WatchStatus, string> = { want: "想看", watching: "�
 function Home() {
   const { data: user, isLoading } = useMe();
   const [tab, setTab] = useState<WatchStatus | "all">("all");
-  const { data: movies } = useMovies(tab === "all" ? undefined : tab);
+  const { data: movies } = useMovies(tab === "all" ? undefined : tab, !!user);
 
   if (isLoading) return null;
 

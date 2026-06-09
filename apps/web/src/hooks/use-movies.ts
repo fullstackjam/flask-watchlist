@@ -3,9 +3,10 @@ import type { CreateMovieInput, UpdateMovieInput, WatchStatus } from "@watchlist
 import type { Movie } from "../../../api/src/db/schema";
 import { api } from "../lib/api";
 
-export function useMovies(status?: WatchStatus) {
+export function useMovies(status?: WatchStatus, enabled = true) {
   return useQuery({
     queryKey: ["movies", status ?? "all"],
+    enabled,
     queryFn: async () => {
       const res = await api.api.movies.$get({ query: status ? { status } : {} });
       const { movies } = (await res.json()) as { movies: Movie[] };
