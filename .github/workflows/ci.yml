@@ -55,12 +55,10 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: |
           jq -n \
-            --arg cid "Ov23liSKrfQLLfrbscDJ" \
             --arg csecret "$GH_OAUTH_CLIENT_SECRET" \
             --arg jwt "$JWT_SECRET" \
             --arg tmdb "$TMDB_API_KEY" \
-            --arg appurl "https://watchlist.fullstackjam.com" \
-            '{GITHUB_CLIENT_ID:$cid,GITHUB_CLIENT_SECRET:$csecret,JWT_SECRET:$jwt,TMDB_API_KEY:$tmdb,APP_URL:$appurl}' \
+            '{GITHUB_CLIENT_SECRET:$csecret,JWT_SECRET:$jwt,TMDB_API_KEY:$tmdb}' \
             > secrets.json
           pnpm exec wrangler secret bulk secrets.json
           rm -f secrets.json

@@ -6,6 +6,10 @@
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
   "routes": [{ "pattern": "watchlist.fullstackjam.com", "custom_domain": true }],
+  "vars": {
+    "GITHUB_CLIENT_ID": "Ov23liSKrfQLLfrbscDJ",
+    "APP_URL": "https://watchlist.fullstackjam.com"
+  },
   "assets": {
     "directory": "../web/dist",
     "binding": "ASSETS",
