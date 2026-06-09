@@ -38,13 +38,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter web build
-      - name: Apply D1 migrations
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: apps/api
-          command: d1 migrations apply watchlist --remote
+      # D1 schema migrations are applied manually on schema changes:
+      #   pnpm --filter api db:migrate:remote
+      # (kept out of CI so the deploy token only needs Workers scope, not D1)
       - name: Deploy worker
         uses: cloudflare/wrangler-action@v3
         with:
