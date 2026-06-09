@@ -27,6 +27,12 @@ jobs:
     needs: test
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -37,14 +43,26 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+        working-directory: .
       - run: pnpm --filter web build
-      # D1 schema migrations are applied manually on schema changes:
-      #   pnpm --filter api db:migrate:remote
-      # (kept out of CI so the deploy token only needs Workers scope, not D1)
+        working-directory: .
+      - name: Apply D1 migrations
+        run: pnpm exec wrangler d1 migrations apply watchlist --remote
+      - name: Sync Worker secrets
+        env:
+          GH_OAUTH_CLIENT_SECRET: ${{ secrets.GH_OAUTH_CLIENT_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          jq -n \
+            --arg cid "Ov23liSKrfQLLfrbscDJ" \
+            --arg csecret "$GH_OAUTH_CLIENT_SECRET" \
+            --arg jwt "$JWT_SECRET" \
+            --arg tmdb "$TMDB_API_KEY" \
+            --arg appurl "https://watchlist.fullstackjam.com" \
+            '{GITHUB_CLIENT_ID:$cid,GITHUB_CLIENT_SECRET:$csecret,JWT_SECRET:$jwt,TMDB_API_KEY:$tmdb,APP_URL:$appurl}' \
+            > secrets.json
+          pnpm exec wrangler secret bulk secrets.json
+          rm -f secrets.json
       - name: Deploy worker
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: apps/api
-          command: deploy
+        run: pnpm exec wrangler deploy
