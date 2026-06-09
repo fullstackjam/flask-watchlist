@@ -13,5 +13,10 @@ const routes = app
   .route("/movies", movies)
   .route("/metadata", metadata);
 
+app.onError((err, c) => {
+  console.error(err);
+  return c.json({ error: "Internal Server Error" }, 500);
+});
+
 export type AppType = typeof routes;
 export default app;

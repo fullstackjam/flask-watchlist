@@ -1,6 +1,8 @@
-import { Hono } from "hono";
-import type { AppEnv } from "./types";
+import app from "./app";
+import type { Bindings } from "./types";
 
-const app = new Hono<AppEnv>();
-
-export default app;
+export default {
+  fetch(request: Request, env: Bindings, ctx: ExecutionContext) {
+    return app.fetch(request, env, ctx);
+  },
+};
